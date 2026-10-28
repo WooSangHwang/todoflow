@@ -1,0 +1,27 @@
+@import 'tailwindcss';
+
+/* <html class="dark">일 때 dark: 유틸리티 적용 (테마 토글용, src/lib/theme.ts 참고) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  color-scheme: light;
+}
+:root.dark {
+  color-scheme: dark;
+}
+
+@layer base {
+  /* 키보드 포커스를 모든 요소에서 같은 모양으로 분명하게 표시 (WCAG 2.4.7) */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-indigo-700 dark:outline-indigo-300;
+  }
+  /* 입력칸 안내 문구도 4.5:1 이상 (Tailwind 기본값은 반투명이라 대비 부족) */
+  ::placeholder {
+    @apply text-slate-500 opacity-100 dark:text-slate-400;
+  }
+}
+
+/* 헤더 + 본문(flex-1)이 화면 높이를 채우도록 루트를 세로 flex로 */
+#root {
+  @apply flex min-h-svh flex-col bg-slate-50 dark:bg-slate-900;
+}

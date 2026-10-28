@@ -1,0 +1,315 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": "1",
+        "title": "프로젝트 초기 설정 및 개발 환경 구축",
+        "description": "Vite + React + TypeScript 프로젝트 생성 및 Tailwind CSS, ESLint, Prettier 등 개발 도구 설정",
+        "details": "1. Vite 프로젝트 생성: `npm create vite@latest todoflow -- --template react-ts`\n2. 폴더 구조 설계:\n   - /src/pages (페이지 컴포넌트)\n   - /src/components (재사용 컴포넌트)\n   - /src/hooks (커스텀 훅)\n   - /src/stores (상태 관리)\n   - /src/types (TypeScript 타입 정의)\n   - /src/lib (유틸리티 함수)\n3. Tailwind CSS 설치 및 설정:\n   ```bash\n   npm install -D tailwindcss postcss autoprefixer\n   npx tailwindcss init -p\n   ```\n4. tailwind.config.js 설정 (다크모드 지원 포함)\n5. ESLint + Prettier 설치 및 규칙 설정:\n   ```bash\n   npm install -D eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin prettier eslint-config-prettier eslint-plugin-react-hooks\n   ```\n6. .eslintrc.json 및 .prettierrc 파일 생성\n7. package.json에 스크립트 추가 (lint, format)\n8. Vite 빌드 최적화 설정 (vite.config.ts에서 chunk splitting 등)\n9. .gitignore 업데이트",
+        "testStrategy": "- `npm run dev`로 개발 서버 정상 실행 확인\n- `npm run build`로 프로덕션 빌드 성공 확인\n- `npm run lint`로 린팅 규칙 적용 확인\n- Tailwind CSS 클래스가 정상적으로 적용되는지 테스트 페이지 생성하여 확인\n- 폴더 구조가 올바르게 생성되었는지 확인",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-10-28T03:02:15.805Z"
+      },
+      {
+        "id": "2",
+        "title": "Firebase 프로젝트 설정 및 SDK 통합",
+        "description": "Firebase 콘솔에서 프로젝트 생성 및 Authentication, Firestore 서비스 활성화, React 앱에 Firebase SDK 통합",
+        "details": "1. Firebase 콘솔(https://console.firebase.google.com)에서 새 프로젝트 생성\n2. Authentication 서비스 활성화:\n   - Google 로그인 제공업체 활성화\n   - 이메일/패스워드 제공업체 활성화\n3. Firestore Database 생성 (테스트 모드로 시작 후 보안 규칙 나중에 설정)\n4. Firebase SDK 설치:\n   ```bash\n   npm install firebase\n   ```\n5. /src/lib/firebase.ts 파일 생성 및 초기화 코드 작성:\n   ```typescript\n   import { initializeApp } from 'firebase/app';\n   import { getAuth } from 'firebase/auth';\n   import { getFirestore } from 'firebase/firestore';\n   \n   const firebaseConfig = {\n     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,\n     authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,\n     projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,\n     storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,\n     messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,\n     appId: import.meta.env.VITE_FIREBASE_APP_ID\n   };\n   \n   const app = initializeApp(firebaseConfig);\n   export const auth = getAuth(app);\n   export const db = getFirestore(app);\n   ```\n6. .env 파일 생성 및 Firebase 설정 값 추가\n7. .env.example 파일 생성 (실제 값 제외)\n8. .gitignore에 .env 추가 확인",
+        "testStrategy": "- Firebase 콘솔에서 프로젝트 생성 확인\n- auth 및 db 객체가 정상적으로 export되는지 확인\n- 환경 변수가 올바르게 로드되는지 console.log로 확인 (민감 정보 제외)\n- Firebase SDK 버전 호환성 확인",
+        "priority": "high",
+        "dependencies": [
+          "1"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-10-28T04:14:35.827Z"
+      },
+      {
+        "id": "3",
+        "title": "React Router 및 기본 페이지 구조 생성",
+        "description": "React Router 설정 및 /signin, /app, /account 페이지 생성, PrivateRoute 컴포넌트 구현",
+        "details": "1. React Router 설치:\n   ```bash\n   npm install react-router-dom\n   ```\n2. /src/App.tsx에서 Router 설정:\n   ```typescript\n   import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';\n   ```\n3. 페이지 컴포넌트 생성:\n   - /src/pages/SignInPage.tsx (로그인/회원가입 통합 페이지)\n   - /src/pages/TodoAppPage.tsx (메인 Todo 앱)\n   - /src/pages/AccountPage.tsx (사용자 프로필)\n4. PrivateRoute 컴포넌트 생성 (/src/components/PrivateRoute.tsx):\n   ```typescript\n   import { Navigate } from 'react-router-dom';\n   import { useAuth } from '../hooks/useAuth';\n   \n   export const PrivateRoute = ({ children }: { children: React.ReactNode }) => {\n     const { user, loading } = useAuth();\n     if (loading) return <div>Loading...</div>;\n     return user ? <>{children}</> : <Navigate to=\"/signin\" />;\n   };\n   ```\n5. 라우트 구조 설정:\n   - / -> /app로 리다이렉트\n   - /signin (public)\n   - /app (private)\n   - /account (private)\n6. 각 페이지에 기본 레이아웃 및 제목 추가\n7. 404 페이지 처리",
+        "testStrategy": "- 각 라우트로 직접 접근 가능한지 확인\n- 미인증 상태에서 /app 접근 시 /signin으로 리다이렉트되는지 확인\n- 인증 상태에서 각 페이지 접근 가능한지 확인\n- 브라우저 뒤로가기/앞으로가기 정상 작동 확인",
+        "priority": "high",
+        "dependencies": [
+          "1"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-10-28T04:19:24.750Z"
+      },
+      {
+        "id": "4",
+        "title": "Firebase Authentication 시스템 구현",
+        "description": "Google 로그인, 이메일/패스워드 로그인, 회원가입, 비밀번호 재설정, 로그아웃 기능 구현 및 인증 상태 관리",
+        "details": "1. useAuth 커스텀 훅 생성 (/src/hooks/useAuth.ts):\n   ```typescript\n   import { useState, useEffect } from 'react';\n   import { User, onAuthStateChanged } from 'firebase/auth';\n   import { auth } from '../lib/firebase';\n   \n   export const useAuth = () => {\n     const [user, setUser] = useState<User | null>(null);\n     const [loading, setLoading] = useState(true);\n     \n     useEffect(() => {\n       const unsubscribe = onAuthStateChanged(auth, (user) => {\n         setUser(user);\n         setLoading(false);\n       });\n       return unsubscribe;\n     }, []);\n     \n     return { user, loading };\n   };\n   ```\n2. 인증 서비스 함수 생성 (/src/lib/auth.ts):\n   - signInWithGoogle(): GoogleAuthProvider 사용\n   - signInWithEmail(email, password): signInWithEmailAndPassword\n   - signUpWithEmail(email, password): createUserWithEmailAndPassword\n   - resetPassword(email): sendPasswordResetEmail\n   - signOut(): signOut\n3. SignInPage 컴포넌트 구현:\n   - 이메일/패스워드 입력 폼\n   - Google 로그인 버튼\n   - 회원가입/로그인 탭 전환\n   - 비밀번호 재설정 링크\n   - 에러 메시지 표시\n4. 폼 유효성 검증:\n   - 이메일 형식 검증\n   - 패스워드 최소 6자 이상\n   - 에러 핸들링 및 사용자 친화적 메시지\n5. 로그아웃 버튼을 헤더/네비게이션에 추가",
+        "testStrategy": "- Google 로그인 플로우 전체 테스트 (팝업 또는 리다이렉트)\n- 이메일/패스워드 회원가입 테스트\n- 이메일/패스워드 로그인 테스트\n- 잘못된 비밀번호 입력 시 에러 메시지 확인\n- 비밀번호 재설정 이메일 발송 확인\n- 로그아웃 후 보호된 라우트 접근 시 리다이렉트 확인\n- Firebase 콘솔에서 사용자 생성 확인",
+        "priority": "high",
+        "dependencies": [
+          "2",
+          "3"
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "useAuth 커스텀 훅 생성 및 인증 상태 관리",
+            "description": "Firebase Authentication의 인증 상태를 실시간으로 추적하는 useAuth 커스텀 훅을 구현하여 사용자 로그인 상태와 로딩 상태를 관리합니다.",
+            "dependencies": [],
+            "details": "/src/hooks/useAuth.ts 파일을 생성하고 다음을 구현합니다:\n\n1. useState를 사용하여 user(User | null)와 loading(boolean) 상태 관리\n2. useEffect 내에서 onAuthStateChanged 리스너 등록\n3. 인증 상태 변경 시 user 상태 업데이트 및 loading을 false로 설정\n4. cleanup 함수로 unsubscribe 반환하여 메모리 누수 방지\n5. { user, loading }을 반환하여 컴포넌트에서 사용 가능하도록 구현\n\n의존성: firebase/auth 모듈의 User, onAuthStateChanged 임포트, ../lib/firebase에서 auth 객체 임포트",
+            "status": "done",
+            "testStrategy": "useAuth 훅을 테스트 컴포넌트에서 호출하여 초기 loading이 true인지 확인, Firebase 콘솔에서 테스트 사용자로 로그인 후 user 객체가 정상적으로 설정되는지 확인, 로그아웃 시 user가 null로 변경되는지 확인",
+            "parentId": "undefined",
+            "updatedAt": "2026-10-28T04:19:26.347Z"
+          },
+          {
+            "id": 2,
+            "title": "Firebase Authentication 서비스 함수 구현",
+            "description": "Google 로그인, 이메일/패스워드 로그인, 회원가입, 비밀번호 재설정, 로그아웃 등 모든 인증 관련 서비스 함수를 구현합니다.",
+            "dependencies": [],
+            "details": "/src/lib/auth.ts 파일을 생성하고 다음 함수들을 구현합니다:\n\n1. signInWithGoogle(): \n   - GoogleAuthProvider 인스턴스 생성\n   - signInWithPopup(auth, provider) 호출\n   - 에러 처리 및 사용자 정보 반환\n\n2. signInWithEmail(email: string, password: string):\n   - signInWithEmailAndPassword(auth, email, password) 호출\n   - 에러 코드별 한글 메시지 매핑 (auth/user-not-found, auth/wrong-password 등)\n\n3. signUpWithEmail(email: string, password: string):\n   - createUserWithEmailAndPassword(auth, email, password) 호출\n   - 회원가입 성공 후 사용자 정보 반환\n\n4. resetPassword(email: string):\n   - sendPasswordResetEmail(auth, email) 호출\n   - 성공/실패 메시지 반환\n\n5. logOut():\n   - signOut(auth) 호출\n   - 에러 처리\n\n모든 함수는 async/await 패턴 사용 및 try-catch로 에러 핸들링",
+            "status": "done",
+            "testStrategy": "각 함수를 개별적으로 테스트: Google 로그인 팝업 정상 작동 확인, 유효한 이메일/패스워드로 회원가입 및 로그인 성공 확인, 잘못된 비밀번호로 로그인 시도 시 적절한 에러 메시지 반환 확인, 비밀번호 재설정 이메일 수신 확인, 로그아웃 후 useAuth에서 user가 null로 변경되는지 확인",
+            "parentId": "undefined",
+            "updatedAt": "2026-10-28T04:29:46.581Z"
+          },
+          {
+            "id": 3,
+            "title": "SignInPage 컴포넌트 UI 및 폼 구현",
+            "description": "로그인/회원가입 통합 페이지를 구현하여 사용자가 이메일/패스워드 또는 Google로 인증할 수 있는 UI를 제공합니다.",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "/src/pages/SignInPage.tsx 파일을 생성하고 다음을 구현합니다:\n\n1. 상태 관리:\n   - mode: 'signin' | 'signup' (탭 전환용)\n   - email, password 입력 상태\n   - error, loading 상태\n   - showResetPassword (비밀번호 재설정 모드)\n\n2. UI 구조:\n   - 로그인/회원가입 탭 전환 버튼\n   - 이메일 입력 필드 (type=\"email\")\n   - 패스워드 입력 필드 (type=\"password\")\n   - 제출 버튼 (로그인/회원가입)\n   - Google 로그인 버튼 (Google 아이콘 포함)\n   - 비밀번호 재설정 링크\n   - 에러 메시지 표시 영역\n\n3. 이벤트 핸들러:\n   - handleEmailSignIn/SignUp: auth.ts의 함수 호출\n   - handleGoogleSignIn: signInWithGoogle 호출\n   - handleResetPassword: resetPassword 호출\n   - 성공 시 /app으로 리다이렉트 (useNavigate)\n\n4. Tailwind CSS로 반응형 디자인 적용",
+            "status": "done",
+            "testStrategy": "로그인/회원가입 탭 전환 동작 확인, 이메일/패스워드 입력 후 회원가입 버튼 클릭 시 Firebase에 사용자 생성 확인, 생성된 계정으로 로그인 성공 확인, Google 로그인 버튼 클릭 시 팝업 표시 및 로그인 성공 후 /app으로 리다이렉트 확인, 비밀번호 재설정 링크 클릭 시 이메일 입력 UI 표시 확인",
+            "parentId": "undefined",
+            "updatedAt": "2026-10-28T04:29:46.584Z"
+          },
+          {
+            "id": 4,
+            "title": "폼 유효성 검증 및 에러 처리 구현",
+            "description": "사용자 입력값에 대한 클라이언트 측 유효성 검증 및 Firebase 에러에 대한 사용자 친화적인 메시지 처리를 구현합니다.",
+            "dependencies": [
+              3
+            ],
+            "details": "SignInPage 컴포넌트에 다음 유효성 검증 로직을 추가합니다:\n\n1. 이메일 형식 검증:\n   - 정규식을 사용한 이메일 형식 체크\n   - 빈 값 체크\n   - 실시간 검증 또는 제출 시 검증\n\n2. 패스워드 검증:\n   - 최소 6자 이상 (Firebase 기본 요구사항)\n   - 회원가입 시 패스워드 확인 필드 추가 및 일치 여부 체크\n   - 빈 값 체크\n\n3. Firebase 에러 코드 한글 메시지 매핑 유틸리티 함수 생성 (/src/lib/errorMessages.ts):\n   - auth/invalid-email: \"유효하지 않은 이메일 형식입니다\"\n   - auth/user-not-found: \"등록되지 않은 사용자입니다\"\n   - auth/wrong-password: \"비밀번호가 일치하지 않습니다\"\n   - auth/email-already-in-use: \"이미 사용 중인 이메일입니다\"\n   - auth/weak-password: \"비밀번호는 최소 6자 이상이어야 합니다\"\n   - auth/popup-closed-by-user: \"로그인 팝업이 닫혔습니다\"\n   - 기타 에러: \"로그인 중 오류가 발생했습니다\"\n\n4. 에러 메시지 UI:\n   - 입력 필드별 인라인 에러 표시 (빨간색 테두리 + 메시지)\n   - 전역 에러 메시지 (상단 또는 폼 하단에 표시)\n\n5. 로딩 상태 처리:\n   - 제출 중 버튼 비활성화\n   - 로딩 스피너 표시",
+            "status": "done",
+            "testStrategy": "잘못된 이메일 형식 입력 시 에러 메시지 표시 확인, 5자 이하 패스워드 입력 시 유효성 검증 실패 확인, 존재하지 않는 계정으로 로그인 시도 시 '등록되지 않은 사용자입니다' 메시지 확인, 잘못된 패스워드로 로그인 시 '비밀번호가 일치하지 않습니다' 메시지 확인, 이미 가입된 이메일로 회원가입 시도 시 '이미 사용 중인 이메일입니다' 메시지 확인, 로딩 중 버튼 비활성화 확인",
+            "parentId": "undefined",
+            "updatedAt": "2026-10-28T04:29:46.586Z"
+          },
+          {
+            "id": 5,
+            "title": "로그아웃 기능 및 네비게이션 통합",
+            "description": "헤더 또는 네비게이션 컴포넌트에 로그아웃 버튼을 추가하고, PrivateRoute에서 인증 상태를 확인하여 보호된 라우트를 구현합니다.",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "1. Header 컴포넌트 생성 (/src/components/Header.tsx):\n   - useAuth 훅으로 현재 사용자 정보 가져오기\n   - 사용자 이메일 또는 이름 표시\n   - 로그아웃 버튼 추가\n   - 로그아웃 버튼 클릭 시 logOut() 호출 후 /signin으로 리다이렉트\n\n2. PrivateRoute 컴포넌트 업데이트 (/src/components/PrivateRoute.tsx):\n   - useAuth 훅 사용\n   - loading이 true일 때 로딩 스피너 또는 스켈레톤 표시\n   - user가 null이면 Navigate to=\"/signin\" 컴포넌트 반환\n   - user가 존재하면 children 렌더링\n\n3. App.tsx에 Header 컴포넌트 통합:\n   - 인증된 라우트(/app, /account)에서만 Header 표시\n   - 또는 전역으로 표시하되 로그인 페이지에서는 숨김\n\n4. TodoAppPage 및 AccountPage에서 useAuth 사용하여 사용자 정보 표시\n\n5. 로그아웃 후 상태 초기화:\n   - 로컬 스토리지 클리어 (필요 시)\n   - 전역 상태 리셋 (필요 시)",
+            "status": "done",
+            "testStrategy": "로그인 후 /app 페이지에서 Header가 표시되고 사용자 정보가 보이는지 확인, 로그아웃 버튼 클릭 시 /signin으로 리다이렉트되고 user가 null로 변경되는지 확인, 로그아웃 상태에서 /app 접근 시 /signin으로 자동 리다이렉트 확인, 로그인 상태에서 /signin 접근 시 /app으로 리다이렉트 (선택사항), 브라우저 새로고침 후에도 인증 상태 유지 확인",
+            "parentId": "undefined",
+            "updatedAt": "2026-10-28T04:29:46.588Z"
+          }
+        ],
+        "updatedAt": "2026-10-28T04:29:46.588Z"
+      },
+      {
+        "id": "5",
+        "title": "Firestore 데이터 모델 설계 및 보안 규칙 작성",
+        "description": "Todo 데이터 스키마 설계, Firestore 보안 규칙 작성, 데이터 유효성 검증 로직 구현",
+        "details": "1. 데이터 스키마 설계 (TypeScript 타입 정의 /src/types/todo.ts):\n   ```typescript\n   export interface Todo {\n     id: string;\n     title: string;\n     description: string;\n     completed: boolean;\n     priority: 'low' | 'medium' | 'high';\n     dueDate: Date | null;\n     tags: string[];\n     createdAt: Date;\n     updatedAt: Date;\n     userId: string;\n   }\n   ```\n2. Firestore 컬렉션 구조:\n   - users/{uid}/todos/{todoId}\n   - 사용자별로 독립된 todos 서브컬렉션\n3. Firestore 보안 규칙 작성 (Firebase 콘솔 또는 firestore.rules):\n   ```\n   rules_version = '2';\n   service cloud.firestore {\n     match /databases/{database}/documents {\n       match /users/{userId}/todos/{todoId} {\n         allow read, write: if request.auth != null && request.auth.uid == userId;\n         allow create: if request.auth != null \n           && request.auth.uid == userId\n           && request.resource.data.title is string\n           && request.resource.data.title.size() > 0\n           && request.resource.data.title.size() <= 200;\n       }\n     }\n   }\n   ```\n4. 인덱스 설정 (복합 쿼리를 위한):\n   - userId + createdAt (내림차순)\n   - userId + dueDate (오름차순)\n   - userId + priority (내림차순)\n5. 데이터 변환 유틸리티 함수 생성 (/src/lib/todoConverter.ts):\n   - Firestore Timestamp ↔ Date 변환\n   - Todo 객체 직렬화/역직렬화",
+        "testStrategy": "- Firestore 콘솔에서 수동으로 데이터 추가 후 보안 규칙 테스트\n- 다른 사용자의 todos 읽기 시도하여 권한 거부 확인\n- 필수 필드 누락 시 생성 실패 확인\n- 제목 길이 초과 시 생성 실패 확인\n- 복합 쿼리 실행 시 인덱스 자동 생성 링크 확인",
+        "priority": "high",
+        "dependencies": [
+          "2"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-10-28T04:40:21.329Z"
+      },
+      {
+        "id": "6",
+        "title": "Todo CRUD 기능 및 실시간 동기화 구현",
+        "description": "할일 생성, 읽기, 수정, 삭제 기능 구현 및 Firestore 실시간 동기화, 3초 실행취소 기능 추가",
+        "details": "1. useTodos 커스텀 훅 생성 (/src/hooks/useTodos.ts):\n   ```typescript\n   import { useState, useEffect } from 'react';\n   import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';\n   import { db } from '../lib/firebase';\n   import { Todo } from '../types/todo';\n   \n   export const useTodos = (userId: string) => {\n     const [todos, setTodos] = useState<Todo[]>([]);\n     const [loading, setLoading] = useState(true);\n     \n     useEffect(() => {\n       const q = query(\n         collection(db, `users/${userId}/todos`),\n         orderBy('createdAt', 'desc')\n       );\n       \n       const unsubscribe = onSnapshot(q, (snapshot) => {\n         const todosData = snapshot.docs.map(doc => ({\n           id: doc.id,\n           ...doc.data()\n         })) as Todo[];\n         setTodos(todosData);\n         setLoading(false);\n       });\n       \n       return unsubscribe;\n     }, [userId]);\n     \n     return { todos, loading };\n   };\n   ```\n2. Todo CRUD 서비스 함수 (/src/lib/todoService.ts):\n   - createTodo(userId, todoData): addDoc\n   - updateTodo(userId, todoId, updates): updateDoc\n   - deleteTodo(userId, todoId): deleteDoc\n   - toggleComplete(userId, todoId, completed): updateDoc\n3. 3초 실행취소 기능 구현:\n   - 삭제 시 즉시 삭제하지 않고 UI에서만 제거\n   - Toast/Snackbar로 \"삭제됨. 3초 내 실행취소 가능\" 메시지\n   - setTimeout으로 3초 후 실제 deleteDoc 실행\n   - 실행취소 버튼 클릭 시 타이머 취소\n4. 낙관적 업데이트 패턴 적용:\n   - UI 즉시 업데이트 후 Firestore에 저장\n   - 에러 발생 시 롤백\n5. 에러 처리 및 로딩 상태 관리",
+        "testStrategy": "- 새 할일 추가 후 Firestore 콘솔에서 데이터 확인\n- 할일 수정 후 실시간으로 다른 탭/기기에서도 반영되는지 확인\n- 할일 삭제 후 3초 내 실행취소 테스트\n- 완료 토글 동작 확인\n- 오프라인 상태에서 작업 후 온라인 복귀 시 동기화 확인\n- 여러 할일 동시 생성/수정 시 경쟁 조건 테스트",
+        "priority": "high",
+        "dependencies": [
+          "4",
+          "5"
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "useTodos 커스텀 훅 생성 및 실시간 동기화 구현",
+            "description": "Firestore의 onSnapshot을 사용하여 사용자의 할일 목록을 실시간으로 구독하고 상태를 관리하는 useTodos 커스텀 훅을 구현합니다.",
+            "dependencies": [],
+            "details": "/src/hooks/useTodos.ts 파일을 생성하고 다음을 구현합니다:\n\n1. useState로 todos(Todo[])와 loading(boolean) 상태 관리\n2. useEffect 내에서:\n   - collection(db, `users/${userId}/todos`)로 컬렉션 참조 생성\n   - query와 orderBy('createdAt', 'desc')로 최신순 정렬 쿼리 생성\n   - onSnapshot으로 실시간 리스너 등록\n3. onSnapshot 콜백에서:\n   - snapshot.docs.map으로 문서 데이터를 Todo 객체 배열로 변환\n   - id는 doc.id로, 나머지는 doc.data()로 추출\n   - Firestore Timestamp를 JavaScript Date로 변환 (createdAt, updatedAt, dueDate)\n   - setTodos로 상태 업데이트, setLoading(false)\n4. cleanup 함수로 unsubscribe 반환하여 메모리 누수 방지\n5. userId가 변경될 때마다 재구독되도록 dependency 배열에 userId 추가\n6. { todos, loading } 반환\n\n의존성: firebase/firestore 모듈의 collection, query, onSnapshot, orderBy 임포트, ../lib/firebase에서 db 객체 임포트, ../types/todo에서 Todo 타입 임포트",
+            "status": "done",
+            "testStrategy": "useTodos 훅을 TodoAppPage에서 useAuth로 얻은 userId와 함께 호출하여 초기 loading이 true인지 확인, Firestore 콘솔에서 수동으로 할일을 추가/수정/삭제한 후 UI가 실시간으로 업데이트되는지 확인, 여러 탭에서 동시에 열어 한 탭에서 변경 시 다른 탭에서도 즉시 반영되는지 확인",
+            "parentId": "undefined",
+            "updatedAt": "2026-10-28T04:45:42.497Z"
+          },
+          {
+            "id": 2,
+            "title": "Todo CRUD 서비스 함수 구현",
+            "description": "Firestore에 할일을 생성, 수정, 삭제, 완료 토글하는 모든 CRUD 서비스 함수를 구현합니다.",
+            "dependencies": [],
+            "details": "/src/lib/todoService.ts 파일을 생성하고 다음 함수들을 구현합니다:\n\n1. createTodo(userId: string, todoData: Omit<Todo, 'id' | 'createdAt' | 'updatedAt' | 'userId'>):\n   - collection(db, `users/${userId}/todos`)로 컬렉션 참조\n   - addDoc으로 새 문서 생성\n   - createdAt, updatedAt은 serverTimestamp() 사용\n   - userId 자동 추가\n   - 생성된 문서 ID 반환\n\n2. updateTodo(userId: string, todoId: string, updates: Partial<Todo>):\n   - doc(db, `users/${userId}/todos/${todoId}`)로 문서 참조\n   - updateDoc으로 업데이트\n   - updatedAt을 serverTimestamp()로 자동 설정\n   - updates에 id, userId, createdAt은 제외\n\n3. deleteTodo(userId: string, todoId: string):\n   - doc(db, `users/${userId}/todos/${todoId}`)로 문서 참조\n   - deleteDoc으로 삭제\n\n4. toggleComplete(userId: string, todoId: string, completed: boolean):\n   - updateTodo를 재사용하되 { completed, updatedAt: serverTimestamp() } 전달\n\n모든 함수는 async/await 패턴 사용 및 try-catch로 에러 핸들링, 에러 발생 시 사용자 친화적 메시지와 함께 throw",
+            "status": "done",
+            "testStrategy": "각 함수를 개별적으로 테스트: createTodo 호출 후 Firestore 콘솔에서 문서 생성 확인 및 createdAt/updatedAt이 서버 타임스탬프로 설정되었는지 확인, updateTodo로 제목 변경 후 useTodos로 실시간 반영 확인, toggleComplete로 completed 상태 변경 확인, deleteTodo 호출 후 문서 삭제 확인, 존재하지 않는 todoId로 수정/삭제 시도 시 적절한 에러 처리 확인",
+            "parentId": "undefined",
+            "updatedAt": "2026-10-28T04:45:42.500Z"
+          },
+          {
+            "id": 3,
+            "title": "3초 실행취소 기능 구현",
+            "description": "할일 삭제 시 즉시 삭제하지 않고 3초간 실행취소 가능한 유예 기간을 제공하는 기능을 구현합니다.",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "삭제 작업에 실행취소 메커니즘을 추가합니다:\n\n1. 삭제 대기열 상태 관리:\n   - useState로 pendingDeletes: Map<string, NodeJS.Timeout> 관리\n   - Map에 todoId를 키로, setTimeout 타이머를 값으로 저장\n\n2. handleDeleteWithUndo 함수 구현:\n   - UI에서 해당 할일을 즉시 숨김 (todos.filter로 제외)\n   - Toast/Snackbar로 \"삭제됨. 3초 내 실행취소 가능\" 메시지 표시\n   - setTimeout으로 3초 후 실제 deleteTodo(userId, todoId) 호출 설정\n   - 타이머 ID를 pendingDeletes Map에 저장\n\n3. handleUndo 함수 구현:\n   - pendingDeletes Map에서 해당 todoId의 타이머 찾기\n   - clearTimeout으로 타이머 취소\n   - pendingDeletes에서 제거\n   - UI에 할일 다시 표시 (useTodos의 실시간 데이터가 아직 있으므로 자동 복원)\n   - Toast로 \"삭제 취소됨\" 메시지\n\n4. Toast/Snackbar 컴포넌트:\n   - 실행취소 버튼 포함\n   - 3초 타이머 진행 표시 (선택사항)\n   - 자동으로 사라지도록 설정\n\n5. cleanup:\n   - 컴포넌트 언마운트 시 모든 대기 중인 타이머 취소\n   - useEffect cleanup 함수에서 pendingDeletes의 모든 타이머 clearTimeout",
+            "status": "done",
+            "testStrategy": "할일 삭제 버튼 클릭 시 즉시 UI에서 사라지고 Toast 메시지 표시 확인, 3초 이내 실행취소 버튼 클릭 시 할일이 다시 나타나고 Firestore에도 여전히 존재하는지 확인, 3초 경과 후 Firestore 콘솔에서 문서가 실제로 삭제되었는지 확인, 여러 할일을 연속으로 삭제 후 일부만 실행취소하여 올바른 할일만 복원되는지 확인, 삭제 대기 중 페이지 새로고침 시 할일이 다시 나타나는지 확인 (Firestore에서 아직 삭제 안됨)",
+            "parentId": "undefined",
+            "updatedAt": "2026-10-28T04:45:42.502Z"
+          },
+          {
+            "id": 4,
+            "title": "낙관적 업데이트 패턴 적용 및 에러 롤백",
+            "description": "사용자 경험 향상을 위해 UI를 즉시 업데이트한 후 Firestore에 저장하며, 에러 발생 시 이전 상태로 롤백하는 낙관적 업데이트 패턴을 구현합니다.",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "생성, 수정, 완료 토글 작업에 낙관적 업데이트를 적용합니다:\n\n1. 낙관적 완료 토글 구현:\n   - handleToggleComplete 함수에서:\n     a. 현재 todos 상태를 백업 (const previousTodos = todos)\n     b. UI 즉시 업데이트: setTodos(todos.map(t => t.id === todoId ? {...t, completed: !t.completed} : t))\n     c. try 블록에서 toggleComplete(userId, todoId, !completed) 호출\n     d. catch 블록에서 에러 발생 시 setTodos(previousTodos)로 롤백\n     e. Toast로 에러 메시지 표시\n\n2. 낙관적 할일 생성 구현:\n   - handleCreateTodo 함수에서:\n     a. 임시 ID로 새 할일 객체 생성 (id: 'temp-' + Date.now())\n     b. setTodos([newTodo, ...todos])로 UI 즉시 업데이트\n     c. try 블록에서 createTodo 호출하여 실제 ID 받기\n     d. 성공 시 useTodos의 onSnapshot이 자동으로 실제 데이터로 교체\n     e. catch 블록에서 임시 할일 제거 및 에러 메시지\n\n3. 낙관적 할일 수정 구현:\n   - handleUpdateTodo 함수에서:\n     a. 이전 상태 백업\n     b. UI 즉시 업데이트\n     c. updateTodo 호출\n     d. 에러 시 롤백\n\n4. 에러 처리 유틸리티:\n   - getFirestoreErrorMessage(error) 함수로 Firestore 에러 코드를 한글 메시지로 변환\n   - 일반적인 에러: permission-denied, unavailable, network-request-failed 등\n\n5. 로딩 상태 관리:\n   - 각 작업별 로딩 상태 (creating, updating, deleting)\n   - 작업 중 UI 비활성화 또는 스피너 표시",
+            "status": "done",
+            "testStrategy": "네트워크를 오프라인으로 전환 후 완료 토글 시 UI는 즉시 변경되지만 에러 메시지 표시 및 원래 상태로 롤백 확인, 새 할일 생성 시 임시 ID로 즉시 표시된 후 실제 ID로 교체되는지 확인, Firestore 보안 규칙을 일시적으로 deny all로 변경 후 수정 시도 시 permission-denied 에러와 함께 롤백 확인, 네트워크 속도를 느리게 설정(Chrome DevTools Throttling)한 상태에서 여러 작업을 연속 수행하여 UI 응답성 확인, 각 작업의 로딩 상태가 올바르게 표시되는지 확인",
+            "parentId": "undefined",
+            "updatedAt": "2026-10-28T04:45:42.504Z"
+          },
+          {
+            "id": 5,
+            "title": "Todo CRUD 기능 통합 및 종합 테스트",
+            "description": "모든 CRUD 기능을 TodoAppPage 및 관련 컴포넌트에 통합하고, 실시간 동기화, 실행취소, 낙관적 업데이트가 함께 작동하는지 종합 테스트합니다.",
+            "dependencies": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "details": "TodoAppPage 컴포넌트를 완성하고 모든 기능을 통합합니다:\n\n1. TodoAppPage.tsx 구현:\n   - useAuth로 현재 사용자 가져오기\n   - useTodos(user.uid)로 할일 목록 구독\n   - 모든 CRUD 핸들러 함수 연결 (handleCreate, handleUpdate, handleDelete, handleToggle)\n   - 3초 실행취소 로직 통합\n   - 낙관적 업데이트 패턴 적용\n   - Toast/Snackbar 컴포넌트 추가\n\n2. 기본 TodoList 컴포넌트 구현 (Task 7 전 임시 버전):\n   - todos.map으로 간단한 목록 렌더링\n   - 각 할일에 체크박스, 제목, 수정/삭제 버튼\n   - 빈 상태 메시지\n   - 로딩 스피너\n\n3. 간단한 TodoForm 컴포넌트 (Task 7 전 임시 버전):\n   - 제목 입력 필드\n   - 설명 입력 필드\n   - 우선순위 선택\n   - 저장 버튼\n\n4. Toast/Snackbar 컴포넌트 구현:\n   - 메시지 표시\n   - 실행취소 버튼 (삭제 시)\n   - 자동 사라짐 (3-5초)\n   - 여러 메시지 스택 관리\n\n5. 에러 경계(ErrorBoundary) 추가:\n   - 예상치 못한 에러 캐치\n   - 사용자 친화적 에러 페이지\n\n6. 종합 테스트 시나리오:\n   - 새 할일 추가 → Firestore 확인\n   - 할일 수정 → 실시간 반영 확인\n   - 할일 삭제 → 3초 실행취소 테스트\n   - 완료 토글 → 낙관적 업데이트 확인\n   - 오프라인 상태에서 작업 → 온라인 복귀 시 동기화 확인\n   - 여러 탭에서 동시 작업 → 실시간 동기화 확인\n   - 여러 할일 빠르게 생성/수정 → 경쟁 조건 테스트",
+            "status": "done",
+            "testStrategy": "TodoAppPage에서 새 할일 추가 후 Firestore 콘솔에서 데이터 생성 확인 및 createdAt 필드 확인, 할일 제목 수정 후 다른 브라우저 탭에서 실시간 반영 확인, 할일 삭제 버튼 클릭 → Toast 메시지 확인 → 2초 후 실행취소 → 할일 복원 확인, 할일 삭제 후 3초 경과 → Firestore에서 삭제 확인, 완료 체크박스 클릭 시 즉시 UI 변경 확인, 네트워크 오프라인 전환 → 작업 수행 → 에러 메시지 → 온라인 복귀 → 작업 재시도 → 성공 확인, 10개 할일을 연속 생성하여 모두 Firestore에 저장되는지 확인, Chrome DevTools Network 탭에서 onSnapshot 이벤트 확인, 두 개의 브라우저 탭에서 동시에 같은 할일 수정 시 Firestore의 최종 상태 확인 (last write wins)",
+            "parentId": "undefined",
+            "updatedAt": "2026-10-28T04:45:42.506Z"
+          }
+        ],
+        "updatedAt": "2026-10-28T04:45:42.506Z"
+      },
+      {
+        "id": "7",
+        "title": "Todo UI 컴포넌트 및 반응형 레이아웃 구현",
+        "description": "TodoItem, TodoEditor, TodoList 컴포넌트 생성 및 모바일/태블릿/데스크톱 반응형 디자인 구현",
+        "details": "1. TodoItem 컴포넌트 (/src/components/TodoItem.tsx):\n   - 체크박스 (완료 토글)\n   - 제목 및 설명 표시\n   - 우선순위 배지 (색상 구분: high=빨강, medium=노랑, low=초록)\n   - 마감일 표시 (지나면 빨간색)\n   - 태그 표시\n   - 수정/삭제 버튼\n   - 완료된 항목은 텍스트 line-through 및 투명도 조정\n2. TodoEditor 컴포넌트 (/src/components/TodoEditor.tsx):\n   - 제목 입력 (필수)\n   - 설명 입력 (textarea)\n   - 우선순위 선택 (라디오 또는 드롭다운)\n   - 마감일 선택 (date picker)\n   - 태그 입력 (쉼표 구분 또는 태그 입력 컴포넌트)\n   - 저장/취소 버튼\n   - 모달 또는 슬라이드 패널 형태\n3. TodoList 컴포넌트 (/src/components/TodoList.tsx):\n   - todos 배열을 map으로 TodoItem 렌더링\n   - 빈 상태 UI (\"할일이 없습니다\")\n   - 로딩 상태 표시 (스켈레톤 또는 스피너)\n4. 반응형 디자인 (Tailwind 브레이크포인트 활용):\n   - 모바일 (≤640px): 싱글 컬럼, 풀 너비\n   - 태블릿 (641px~1024px): 패딩 추가, 약간의 여백\n   - 데스크톱 (>1024px): 중앙 정렬, 최대 너비 제한 (max-w-4xl)\n5. Tailwind CSS 커스텀 클래스 및 테마 설정\n6. 선택사항: 다크모드 토글 버튼 및 다크모드 스타일",
+        "testStrategy": "- 다양한 화면 크기에서 레이아웃 확인 (Chrome DevTools 반응형 모드)\n- TodoItem의 모든 인터랙션 테스트 (체크박스, 수정, 삭제)\n- TodoEditor로 새 할일 생성 및 기존 할일 수정 테스트\n- 빈 상태 UI 표시 확인\n- 우선순위별 색상 구분 확인\n- 마감일 지난 항목 빨간색 표시 확인\n- 다크모드 토글 시 모든 컴포넌트 스타일 확인",
+        "priority": "medium",
+        "dependencies": [
+          "6"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-10-28T04:50:45.214Z"
+      },
+      {
+        "id": "8",
+        "title": "필터링, 정렬, 검색 기능 구현",
+        "description": "완료/미완료, 우선순위, 태그, 마감일 기준 필터링 및 다양한 정렬 옵션, 텍스트 검색 기능 구현",
+        "details": "1. useFilters 커스텀 훅 생성 (/src/hooks/useFilters.ts):\n   ```typescript\n   export const useFilters = () => {\n     const [filters, setFilters] = useState({\n       completed: 'all', // 'all' | 'completed' | 'active'\n       priority: 'all', // 'all' | 'high' | 'medium' | 'low'\n       tags: [] as string[],\n       dueDate: 'all', // 'all' | 'overdue' | 'today' | 'week'\n       searchText: ''\n     });\n     \n     // localStorage에 필터 상태 저장/복원\n     useEffect(() => {\n       const saved = localStorage.getItem('todoFilters');\n       if (saved) setFilters(JSON.parse(saved));\n     }, []);\n     \n     useEffect(() => {\n       localStorage.setItem('todoFilters', JSON.stringify(filters));\n     }, [filters]);\n     \n     return { filters, setFilters };\n   };\n   ```\n2. useSort 커스텀 훅 생성:\n   - 정렬 기준: createdAt, updatedAt, dueDate, priority\n   - 정렬 방향: asc, desc\n3. 필터링 로직 구현 (/src/lib/filterTodos.ts):\n   ```typescript\n   export const filterTodos = (todos: Todo[], filters: Filters) => {\n     return todos.filter(todo => {\n       // 완료 상태 필터\n       if (filters.completed === 'completed' && !todo.completed) return false;\n       if (filters.completed === 'active' && todo.completed) return false;\n       \n       // 우선순위 필터\n       if (filters.priority !== 'all' && todo.priority !== filters.priority) return false;\n       \n       // 태그 필터\n       if (filters.tags.length > 0 && !filters.tags.some(tag => todo.tags.includes(tag))) return false;\n       \n       // 마감일 필터\n       // ...\n       \n       // 검색 텍스트\n       if (filters.searchText && !todo.title.toLowerCase().includes(filters.searchText.toLowerCase())) return false;\n       \n       return true;\n     });\n   };\n   ```\n4. Filters 컴포넌트 생성 (/src/components/Filters.tsx):\n   - 완료 상태 탭/버튼 (전체/완료/미완료)\n   - 우선순위 드롭다운\n   - 태그 멀티셀렉트\n   - 마감일 필터 버튼\n   - 검색 입력 필드 (debounce 적용)\n5. 정렬 드롭다운 컴포넌트\n6. 필터/정렬 상태를 URL 쿼리 파라미터로 관리 (선택사항)",
+        "testStrategy": "- 각 필터 옵션 개별 테스트\n- 여러 필터 조합 테스트\n- 검색어 입력 시 실시간 필터링 확인\n- 정렬 변경 시 목록 순서 변경 확인\n- localStorage에 필터 상태 저장/복원 확인\n- 빈 결과 처리 (\"필터 조건에 맞는 할일이 없습니다\")",
+        "priority": "medium",
+        "dependencies": [
+          "7"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-10-28T05:00:50.709Z"
+      },
+      {
+        "id": "9",
+        "title": "접근성(a11y) 및 키보드 탐색 구현",
+        "description": "ARIA 라벨, 키보드 탐색, 포커스 관리, 색상 대비 개선 등 웹 접근성 표준 준수",
+        "details": "1. ARIA 속성 추가:\n   - role=\"main\" for main content\n   - role=\"navigation\" for navigation\n   - aria-label for buttons without text\n   - aria-labelledby for sections\n   - aria-describedby for form inputs\n   - aria-live=\"polite\" for status messages\n2. 키보드 탐색 지원:\n   - Tab: 다음 포커스 가능한 요소로 이동\n   - Shift+Tab: 이전 포커스 가능한 요소로 이동\n   - Enter/Space: 버튼 클릭\n   - Arrow keys: 목록 내 이동 (선택사항)\n   - Esc: 모달/에디터 닫기\n3. 포커스 관리:\n   - 모달 열릴 때 첫 번째 입력 필드에 자동 포커스\n   - 모달 닫힐 때 이전 포커스 위치로 복원\n   - 포커스 트랩 (모달 내부에서만 Tab 순환)\n   - visible focus indicator (outline 스타일)\n4. 색상 대비 개선:\n   - WCAG AAA 등급 달성 (최소 7:1 대비)\n   - 색상 대비 체커 도구로 검증\n   - 색맹 사용자를 위한 아이콘/텍스트 보조\n5. 스크린 리더 지원:\n   - semantic HTML 사용 (<header>, <main>, <nav>)\n   - 이미지 alt 텍스트\n   - 상태 변경 시 알림 (aria-live)\n6. skip to main content 링크 추가\n7. 폼 에러 메시지 접근성",
+        "testStrategy": "- Chrome DevTools Lighthouse 접근성 점수 90+ 확인\n- 키보드만으로 전체 앱 사용 가능한지 테스트\n- NVDA 또는 VoiceOver로 스크린 리더 테스트\n- axe DevTools로 자동 접근성 검사\n- 색상 대비 체커로 WCAG AAA 준수 확인\n- Tab 순서가 논리적인지 확인",
+        "priority": "medium",
+        "dependencies": [
+          "7"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-10-28T05:25:55.143Z"
+      },
+      {
+        "id": "10",
+        "title": "국제화(i18n), UX 개선 및 성능 최적화",
+        "description": "한국어/영어 지원, 로딩/에러 상태 처리, 빈 상태 UI, 성능 최적화 (메모이제이션, 지연 로딩) 구현",
+        "details": "1. i18n 라이브러리 설치 (react-i18next):\n   ```bash\n   npm install react-i18next i18next\n   ```\n2. 언어 파일 생성 (/src/locales/ko.json, /src/locales/en.json):\n   - 모든 UI 텍스트를 번역 키로 변환\n   - 복수형, 날짜 형식 등 처리\n3. i18n 설정 (/src/lib/i18n.ts):\n   - 기본 언어: 브라우저 설정 감지\n   - localStorage에 언어 설정 저장\n4. 언어 전환 버튼 추가 (헤더에 KO/EN 토글)\n5. 로딩 상태 개선:\n   - Suspense 및 lazy loading for pages\n   - 스켈레톤 UI for todo list\n   - 스피너 for async actions\n6. 에러 상태 처리:\n   - ErrorBoundary 컴포넌트\n   - 사용자 친화적 에러 메시지\n   - 재시도 버튼\n   - Toast/Snackbar로 일시적 에러 알림\n7. 빈 상태 UI:\n   - 할일 없을 때: \"첫 할일을 추가하세요\" + 일러스트\n   - 필터 결과 없을 때: \"조건에 맞는 할일이 없습니다\"\n8. 성능 최적화:\n   - React.memo for TodoItem\n   - useMemo for filtered/sorted todos\n   - useCallback for event handlers\n   - React.lazy for code splitting\n   - Virtual scrolling (500개+ 할일일 경우, react-window 사용)\n9. 이미지 최적화 (아이콘/일러스트)",
+        "testStrategy": "- 언어 전환 시 모든 텍스트 변경 확인\n- 브라우저 언어 설정에 따른 기본 언어 확인\n- 로딩 중 스켈레톤 UI 표시 확인\n- 네트워크 에러 발생 시 에러 메시지 및 재시도 버튼 확인\n- 빈 상태 UI 각 시나리오별 확인\n- Chrome DevTools Performance 탭으로 렌더링 성능 측정\n- 1000개 할일 생성 후 스크롤 성능 확인 (60fps 유지)\n- Lighthouse Performance 점수 90+ 확인",
+        "priority": "medium",
+        "dependencies": [
+          "8",
+          "9"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-10-28T05:45:43.492Z"
+      },
+      {
+        "id": "11",
+        "title": "테스트 프레임워크 구축 및 핵심 시나리오 테스트",
+        "description": "Vitest 및 Testing Library 설정, Firebase 에뮬레이터 테스트 환경 구축, 핵심 사용자 시나리오 테스트 작성",
+        "details": "1. Vitest 및 Testing Library 설치:\n   ```bash\n   npm install -D vitest @testing-library/react @testing-library/jest-dom @testing-library/user-event jsdom\n   ```\n2. Vitest 설정 (vitest.config.ts):\n   - jsdom 환경 설정\n   - 테스트 파일 패턴: **/*.test.tsx\n   - coverage 설정\n3. Firebase 에뮬레이터 설치 및 설정:\n   ```bash\n   firebase init emulators\n   ```\n   - Authentication 에뮬레이터\n   - Firestore 에뮬레이터\n4. 테스트 헬퍼 함수 생성 (/src/test/helpers.ts):\n   - renderWithProviders (Router + Auth provider)\n   - mockFirebaseUser\n   - waitForLoadingToFinish\n5. 핵심 시나리오 테스트 작성:\n   a. 로그인/로그아웃 테스트:\n      - 이메일 로그인 성공/실패\n      - Google 로그인\n      - 로그아웃 후 리다이렉트\n   b. 할일 생성/완료 테스트:\n      - 새 할일 추가\n      - 완료 토글\n      - 필수 필드 누락 시 에러\n   c. 필터링/정렬 테스트:\n      - 완료 필터 적용\n      - 우선순위 정렬\n   d. 실시간 동기화 테스트:\n      - Firestore 문서 변경 시 UI 업데이트\n   e. 권한 검증 테스트:\n      - 다른 사용자 데이터 접근 시도\n6. package.json에 테스트 스크립트 추가:\n   - test: vitest run\n   - test:watch: vitest\n   - test:coverage: vitest --coverage",
+        "testStrategy": "- `npm run test`로 모든 테스트 통과 확인\n- 테스트 커버리지 80% 이상 달성\n- Firebase 에뮬레이터 정상 실행 확인\n- CI 환경에서 테스트 실행 가능한지 확인\n- 각 핵심 시나리오 테스트가 실제 사용자 플로우를 반영하는지 확인",
+        "priority": "medium",
+        "dependencies": [
+          "10"
+        ],
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-10-28T05:55:47.173Z"
+      },
+      {
+        "id": "12",
+        "title": "CI/CD 파이프라인 구축 및 Firebase Hosting 배포",
+        "description": "GitHub Actions 워크플로우 설정, 자동 린트/테스트/빌드, Firebase Hosting 배포, dev/prod 환경 분리",
+        "details": "1. GitHub Actions 워크플로우 생성 (.github/workflows/ci.yml):\n   ```yaml\n   name: CI/CD\n   on:\n     push:\n       branches: [main, develop]\n     pull_request:\n       branches: [main]\n   \n   jobs:\n     test:\n       runs-on: ubuntu-latest\n       steps:\n         - uses: actions/checkout@v3\n         - uses: actions/setup-node@v3\n           with:\n             node-version: '18'\n         - run: npm ci\n         - run: npm run lint\n         - run: npm run test\n         - run: npm run build\n   ```\n2. Firebase Hosting 설정:\n   ```bash\n   firebase init hosting\n   ```\n   - public directory: dist\n   - single-page app: yes\n3. dev/prod 환경 분리:\n   - Firebase 프로젝트 2개 생성 (todoflow-dev, todoflow-prod)\n   - .env.development, .env.production 파일 생성\n   - GitHub Secrets에 환경 변수 추가\n4. 배포 워크플로우 (.github/workflows/deploy.yml):\n   ```yaml\n   - name: Deploy to Firebase Hosting\n     uses: FirebaseExtended/action-hosting-deploy@v0\n     with:\n       repoToken: '${{ secrets.GITHUB_TOKEN }}'\n       firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'\n       projectId: todoflow-prod\n   ```\n5. PR 프리뷰 배포 설정 (Firebase Hosting preview channels)\n6. 배포 전 자동 테스트 실행\n7. 배포 후 smoke test (선택사항)\n8. 테스트 커버리지 리포트 업로드 (Codecov 등)\n9. 성능 모니터링 설정 (Firebase Performance Monitoring)\n10. 도메인 설정 (선택사항)",
+        "testStrategy": "- main 브랜치 푸시 시 자동 배포 확인\n- PR 생성 시 preview URL 생성 확인\n- 배포된 앱에서 핵심 기능 동작 확인\n- dev/prod 환경이 올바른 Firebase 프로젝트에 연결되었는지 확인\n- GitHub Actions 로그에서 에러 없는지 확인\n- Firebase Hosting URL로 접속하여 앱 정상 작동 확인",
+        "priority": "low",
+        "dependencies": [
+          "11"
+        ],
+        "status": "in-progress",
+        "subtasks": [],
+        "updatedAt": "2026-10-28T06:04:27.465Z"
+      }
+    ],
+    "metadata": {
+      "version": "1.0.0",
+      "lastModified": "2026-10-28T06:04:27.465Z",
+      "taskCount": 12,
+      "completedCount": 11,
+      "tags": [
+        "master"
+      ]
+    }
+  }
+}

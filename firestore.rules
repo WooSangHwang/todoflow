@@ -1,0 +1,40 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    // src/lib/todoConverter.ts의 TODO_LIMITS와 반드시 일치시킬 것
+    function isValidTodo(data) {
+      let fields = ['title', 'description', 'completed', 'priority', 'dueDate', 'tags', 'createdAt', 'updatedAt'];
+      return data.keys().hasOnly(fields)
+        && data.keys().hasAll(fields)
+        && data.title is string
+        && data.title.size() > 0
+        && data.title.size() <= 200
+        && data.description is string
+        && data.description.size() <= 2000
+        && data.completed is bool
+        && data.priority in ['low', 'medium', 'high']
+        && (data.dueDate == null || data.dueDate is timestamp)
+        && data.tags is list
+        && data.tags.size() <= 10
+        && data.createdAt is timestamp
+        && data.updatedAt == request.time;
+    }
+
+    match /users/{userId}/todos/{todoId} {
+      // create/update를 write로 묶으면 규칙이 OR로 합쳐져 검증이 우회되므로 동작별로 분리한다.
+      allow read, delete: if isOwner(userId);
+      allow create: if isOwner(userId)
+        && isValidTodo(request.resource.data)
+        && request.resource.data.createdAt == request.time;
+      allow update: if isOwner(userId)
+        && isValidTodo(request.resource.data)
+        && request.resource.data.createdAt == resource.data.createdAt;
+    }
+  }
+}

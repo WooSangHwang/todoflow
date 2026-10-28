@@ -1,0 +1,168 @@
+{
+  "common": {
+    "loading": "로딩 중"
+  },
+  "nav": {
+    "skipToMain": "본문으로 건너뛰기",
+    "userMenu": "사용자 메뉴",
+    "logout": "로그아웃"
+  },
+  "theme": {
+    "label": "테마: {{current}} (클릭하면 {{next}})",
+    "title": "테마: {{current}}",
+    "system": "시스템 설정",
+    "light": "라이트 모드",
+    "dark": "다크 모드"
+  },
+  "language": {
+    "switch": "Switch to English"
+  },
+  "auth": {
+    "signin": "로그인",
+    "signup": "회원가입",
+    "reset": "비밀번호 재설정",
+    "email": "이메일",
+    "password": "비밀번호",
+    "passwordConfirm": "비밀번호 확인",
+    "sendResetEmail": "재설정 메일 보내기",
+    "forgotPassword": "비밀번호를 잊으셨나요?",
+    "backToSignin": "← 로그인으로 돌아가기",
+    "or": "또는",
+    "continueWithGoogle": "Google로 계속하기",
+    "resetNotice": "가입된 이메일이라면 비밀번호 재설정 메일이 발송됩니다. 메일함을 확인해 주세요.",
+    "errors": {
+      "invalidCredential": "이메일 또는 비밀번호가 올바르지 않습니다.",
+      "invalidEmail": "유효하지 않은 이메일 형식입니다.",
+      "emailInUse": "이미 사용 중인 이메일입니다.",
+      "weakPassword": "비밀번호는 최소 {{min}}자 이상이어야 합니다.",
+      "tooManyRequests": "시도 횟수가 너무 많습니다. 잠시 후 다시 시도해 주세요.",
+      "network": "네트워크 연결을 확인해 주세요.",
+      "popupClosed": "로그인 팝업이 닫혔습니다.",
+      "popupBlocked": "팝업이 차단되었습니다. 브라우저에서 팝업을 허용해 주세요.",
+      "unknown": "로그인 중 오류가 발생했습니다. 다시 시도해 주세요."
+    },
+    "validation": {
+      "emailRequired": "이메일을 입력해 주세요.",
+      "emailInvalid": "올바른 이메일 형식이 아닙니다.",
+      "passwordRequired": "비밀번호를 입력해 주세요.",
+      "passwordTooShort": "비밀번호는 최소 {{min}}자 이상이어야 합니다.",
+      "confirmRequired": "비밀번호를 한 번 더 입력해 주세요.",
+      "confirmMismatch": "비밀번호가 일치하지 않습니다."
+    }
+  },
+  "firestoreErrors": {
+    "permissionDenied": "권한이 없거나 입력값이 올바르지 않습니다.",
+    "unavailable": "서버에 연결할 수 없습니다. 네트워크를 확인해 주세요.",
+    "deadlineExceeded": "요청 시간이 초과되었습니다. 다시 시도해 주세요.",
+    "resourceExhausted": "요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.",
+    "notFound": "이미 삭제된 할 일입니다.",
+    "unauthenticated": "로그인이 만료되었습니다. 다시 로그인해 주세요.",
+    "unknown": "저장 중 오류가 발생했습니다. 다시 시도해 주세요."
+  },
+  "todos": {
+    "heading": "할 일 목록",
+    "showing": "{{count}}개 표시 중 · ",
+    "summary": "남은 할 일 {{remaining}}개 / 전체 {{total}}개"
+  },
+  "quickAdd": {
+    "label": "새 할 일",
+    "placeholder": "할 일을 입력하고 Enter",
+    "add": "추가",
+    "details": "자세히"
+  },
+  "priority": {
+    "high": "높음",
+    "medium": "보통",
+    "low": "낮음"
+  },
+  "dates": {
+    "today": "오늘",
+    "tomorrow": "내일",
+    "yesterday": "어제"
+  },
+  "item": {
+    "toggle": "'{{title}}' 완료",
+    "edit": "수정",
+    "editLabel": "'{{title}}' 수정",
+    "delete": "삭제",
+    "deleteLabel": "'{{title}}' 삭제",
+    "priority": "우선순위 {{label}}",
+    "overdue": "기한 초과 · {{date}}",
+    "due": "마감 {{date}}"
+  },
+  "editor": {
+    "createTitle": "새 할 일",
+    "editTitle": "할 일 수정",
+    "title": "제목",
+    "titleRequired": "제목을 입력해 주세요.",
+    "description": "설명",
+    "priority": "우선순위",
+    "dueDate": "마감일",
+    "tags": "태그",
+    "tagsPlaceholder": "공부, 운동",
+    "tagsHint": "쉼표로 구분 (최대 {{max}}개, 각 {{length}}자)",
+    "cancel": "취소",
+    "save": "저장"
+  },
+  "tags": {
+    "tooMany": "태그는 최대 {{max}}개까지 입력할 수 있습니다.",
+    "tooLong": "태그는 {{length}}자 이하로 입력해 주세요."
+  },
+  "filters": {
+    "region": "필터 및 정렬",
+    "search": "할 일 검색",
+    "searchPlaceholder": "제목, 설명, 태그 검색",
+    "status": "완료 상태",
+    "statusAll": "전체",
+    "statusActive": "진행 중",
+    "statusCompleted": "완료",
+    "priority": "우선순위 필터",
+    "priorityAll": "우선순위: 전체",
+    "priorityOption": "우선순위: {{label}}",
+    "due": "마감일 필터",
+    "dueAll": "마감일: 전체",
+    "dueOverdue": "기한 초과",
+    "dueToday": "오늘 마감",
+    "dueWeek": "7일 이내",
+    "dueNone": "마감일 없음",
+    "sort": "정렬",
+    "sortNewest": "최신순",
+    "sortOldest": "오래된순",
+    "sortUpdated": "최근 수정순",
+    "sortDueSoon": "마감일 빠른순",
+    "sortDueLate": "마감일 늦은순",
+    "sortPriorityHigh": "우선순위 높은순",
+    "sortPriorityLow": "우선순위 낮은순",
+    "tags": "태그 필터",
+    "reset": "필터 초기화"
+  },
+  "list": {
+    "loading": "할 일 불러오는 중",
+    "empty": "할 일이 없습니다",
+    "emptyHint": "위 입력칸에서 새 할 일을 추가해 보세요.",
+    "noMatch": "조건에 맞는 할 일이 없습니다"
+  },
+  "toast": {
+    "deleted": "'{{title}}' 삭제됨",
+    "undo": "실행취소 ({{shortcut}})",
+    "undone": "삭제를 취소했습니다.",
+    "close": "알림 닫기"
+  },
+  "account": {
+    "title": "내 정보",
+    "name": "이름: ",
+    "email": "이메일: ",
+    "provider": "로그인 방식: ",
+    "providerPassword": "이메일/비밀번호",
+    "backToList": "← 할 일 목록"
+  },
+  "notFound": {
+    "message": "페이지를 찾을 수 없습니다.",
+    "home": "홈으로"
+  },
+  "errorBoundary": {
+    "title": "문제가 발생했습니다",
+    "message": "일시적인 오류일 수 있습니다. 페이지를 새로고침해 주세요.",
+    "reload": "새로고침"
+  }
+}

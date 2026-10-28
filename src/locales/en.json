@@ -1,0 +1,169 @@
+{
+  "common": {
+    "loading": "Loading"
+  },
+  "nav": {
+    "skipToMain": "Skip to main content",
+    "userMenu": "User menu",
+    "logout": "Log out"
+  },
+  "theme": {
+    "label": "Theme: {{current}} (click for {{next}})",
+    "title": "Theme: {{current}}",
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "language": {
+    "switch": "한국어로 전환"
+  },
+  "auth": {
+    "signin": "Sign in",
+    "signup": "Sign up",
+    "reset": "Reset password",
+    "email": "Email",
+    "password": "Password",
+    "passwordConfirm": "Confirm password",
+    "sendResetEmail": "Send reset email",
+    "forgotPassword": "Forgot your password?",
+    "backToSignin": "← Back to sign in",
+    "or": "or",
+    "continueWithGoogle": "Continue with Google",
+    "resetNotice": "If this email is registered, a password reset email is on its way. Please check your inbox.",
+    "errors": {
+      "invalidCredential": "Incorrect email or password.",
+      "invalidEmail": "Invalid email address.",
+      "emailInUse": "This email is already in use.",
+      "weakPassword": "Password must be at least {{min}} characters.",
+      "tooManyRequests": "Too many attempts. Please try again later.",
+      "network": "Please check your network connection.",
+      "popupClosed": "The sign-in popup was closed.",
+      "popupBlocked": "The popup was blocked. Please allow popups in your browser.",
+      "unknown": "Something went wrong while signing in. Please try again."
+    },
+    "validation": {
+      "emailRequired": "Please enter your email.",
+      "emailInvalid": "Please enter a valid email address.",
+      "passwordRequired": "Please enter your password.",
+      "passwordTooShort": "Password must be at least {{min}} characters.",
+      "confirmRequired": "Please enter your password again.",
+      "confirmMismatch": "Passwords do not match."
+    }
+  },
+  "firestoreErrors": {
+    "permissionDenied": "You don't have permission, or the input is invalid.",
+    "unavailable": "Can't reach the server. Please check your network.",
+    "deadlineExceeded": "The request timed out. Please try again.",
+    "resourceExhausted": "Too many requests. Please try again later.",
+    "notFound": "This task has already been deleted.",
+    "unauthenticated": "Your session has expired. Please sign in again.",
+    "unknown": "Something went wrong while saving. Please try again."
+  },
+  "todos": {
+    "heading": "Tasks",
+    "showing": "Showing {{count}} · ",
+    "summary_one": "{{remaining}} left / {{total}} task",
+    "summary_other": "{{remaining}} left / {{total}} tasks"
+  },
+  "quickAdd": {
+    "label": "New task",
+    "placeholder": "Type a task and press Enter",
+    "add": "Add",
+    "details": "Details"
+  },
+  "priority": {
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low"
+  },
+  "dates": {
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "yesterday": "Yesterday"
+  },
+  "item": {
+    "toggle": "Complete '{{title}}'",
+    "edit": "Edit",
+    "editLabel": "Edit '{{title}}'",
+    "delete": "Delete",
+    "deleteLabel": "Delete '{{title}}'",
+    "priority": "{{label}} priority",
+    "overdue": "Overdue · {{date}}",
+    "due": "Due {{date}}"
+  },
+  "editor": {
+    "createTitle": "New task",
+    "editTitle": "Edit task",
+    "title": "Title",
+    "titleRequired": "Please enter a title.",
+    "description": "Description",
+    "priority": "Priority",
+    "dueDate": "Due date",
+    "tags": "Tags",
+    "tagsPlaceholder": "study, workout",
+    "tagsHint": "Comma-separated (up to {{max}}, {{length}} characters each)",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  "tags": {
+    "tooMany": "You can add up to {{max}} tags.",
+    "tooLong": "Each tag must be {{length}} characters or fewer."
+  },
+  "filters": {
+    "region": "Filters and sorting",
+    "search": "Search tasks",
+    "searchPlaceholder": "Search titles, descriptions, tags",
+    "status": "Completion status",
+    "statusAll": "All",
+    "statusActive": "Active",
+    "statusCompleted": "Completed",
+    "priority": "Priority filter",
+    "priorityAll": "Priority: All",
+    "priorityOption": "Priority: {{label}}",
+    "due": "Due date filter",
+    "dueAll": "Due: All",
+    "dueOverdue": "Overdue",
+    "dueToday": "Due today",
+    "dueWeek": "Within 7 days",
+    "dueNone": "No due date",
+    "sort": "Sort",
+    "sortNewest": "Newest first",
+    "sortOldest": "Oldest first",
+    "sortUpdated": "Recently updated",
+    "sortDueSoon": "Due date: soonest",
+    "sortDueLate": "Due date: latest",
+    "sortPriorityHigh": "Priority: high to low",
+    "sortPriorityLow": "Priority: low to high",
+    "tags": "Tag filter",
+    "reset": "Reset filters"
+  },
+  "list": {
+    "loading": "Loading tasks",
+    "empty": "No tasks yet",
+    "emptyHint": "Add your first task in the field above.",
+    "noMatch": "No tasks match these filters"
+  },
+  "toast": {
+    "deleted": "Deleted '{{title}}'",
+    "undo": "Undo ({{shortcut}})",
+    "undone": "Delete undone.",
+    "close": "Dismiss notification"
+  },
+  "account": {
+    "title": "Account",
+    "name": "Name: ",
+    "email": "Email: ",
+    "provider": "Sign-in method: ",
+    "providerPassword": "Email/password",
+    "backToList": "← Back to tasks"
+  },
+  "notFound": {
+    "message": "Page not found.",
+    "home": "Go home"
+  },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "message": "This may be a temporary problem. Please reload the page.",
+    "reload": "Reload"
+  }
+}
