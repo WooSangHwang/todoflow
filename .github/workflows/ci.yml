@@ -1,0 +1,158 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# 같은 브랜치에 새로 push하면 진행 중인 이전 실행을 취소한다(main 배포는 끝까지 진행).
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: 22
+  FIREBASE_PROJECT_ID: todoflow-20d80
+
+jobs:
+  build:
+    name: 린트·포맷·타입·빌드
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run format:check
+      # Firebase 웹 설정은 배포된 JS에 그대로 들어가는 공개 값이라 Secrets가 아닌 Variables에 둔다.
+      - run: npm run build
+        env:
+          VITE_FIREBASE_API_KEY: ${{ vars.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ vars.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ vars.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ vars.VITE_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ vars.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID: ${{ vars.VITE_FIREBASE_APP_ID }}
+      # 테스트를 통과한 바로 이 빌드를 프리뷰·운영에 그대로 배포한다.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          retention-days: 7
+
+  test:
+    name: 단위·통합·보안 규칙 테스트
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      # Firebase 에뮬레이터는 Java 21이 필요하다.
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: npm ci
+      - run: npm run test:coverage
+      - name: 커버리지 요약을 실행 결과 화면에 표시
+        if: always()
+        run: node scripts/ci/coverage-summary.mjs >> "$GITHUB_STEP_SUMMARY"
+
+  e2e:
+    name: E2E (Chrome + 에뮬레이터)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: npm ci
+      # 브라우저는 러너에 설치된 Chrome을 쓴다(playwright.config.ts의 channel: 'chrome').
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: |
+            playwright-report
+            test-results
+          retention-days: 7
+
+  preview:
+    name: PR 프리뷰 배포
+    # 포크에서 온 PR은 배포 권한(Secret)을 쓰지 않도록 건너뛴다.
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    needs: [build, test, e2e]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - id: deploy
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TODOFLOW_20D80 }}
+          projectId: ${{ env.FIREBASE_PROJECT_ID }}
+          expires: 7d
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: 프리뷰 주소 smoke 테스트
+        run: npm run test:smoke
+        env:
+          BASE_URL: ${{ steps.deploy.outputs.details_url }}
+
+  live:
+    name: 운영 배포
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [build, test, e2e]
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://${{ env.FIREBASE_PROJECT_ID }}.web.app
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      # 앱과 보안 규칙이 서로 다른 버전이 되지 않도록 함께 배포한다.
+      - name: 보안 규칙 + Hosting 배포
+        run: |
+          echo "$SERVICE_ACCOUNT" > "$RUNNER_TEMP/service-account.json"
+          npx firebase deploy --only firestore:rules,hosting --project "$FIREBASE_PROJECT_ID" --non-interactive
+        env:
+          SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TODOFLOW_20D80 }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/service-account.json
+      - name: 운영 주소 smoke 테스트
+        run: npm run test:smoke
+        env:
+          BASE_URL: https://${{ env.FIREBASE_PROJECT_ID }}.web.app
